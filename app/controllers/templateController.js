@@ -142,7 +142,7 @@ module.exports.resetTemplateData = async(req, res) => {
   var index = componentsData.length - 1;
 
   var originalComponent = componentsData[index].original;
-  var responseStatus = ''
+  var responseStatus = '';
 
   Templates.update({"_id": ObjectId(id)}, {$set: {component: originalComponent} }, function(err, result) {
     if(err) {
