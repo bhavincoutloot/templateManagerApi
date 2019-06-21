@@ -18,7 +18,8 @@ module.exports.addLog = async (id, templateName, oldTemplate, newTemplate, logDa
         console.log("Error while save");
         return err;
       } else {
-        console.log(JSON.stringify(result, undefined, 2));
+        console.log("Inside Log: " + JSON.stringify(result, undefined, 2));
+        console.log("Log ID: " + result._id);
         return result;
       }
     });

@@ -169,6 +169,35 @@ module.exports.getLogs = async(req, res) => {
 }
 
 
+module.exports.addTemplate = async(req, res) => {
+
+    var data = JSON.parse(req.body.strNewTemplate);
+
+    console.log("Data: " + JSON.stringify(data, undefined, 2));
+
+//    res.json({status: "done"});
+
+    var newTemplate = {
+        name : data.name,
+        component : data.component
+    }
+
+    var responseStatus = '';
+
+    Templates.create(newTemplate, function(err, result) {
+      if (err) {
+        responseStatus += " Error while creating Template! ";
+        res.json({status: responseStatus});
+        return err;
+      } else {
+        console.log("Log ID: " + result._id);
+        responseStatus += " Template created with ID: " + result._id;
+        res.json({status: responseStatus});
+      }
+    });
+}
+
+
 module.exports.updateTemplate = async(req, res) => {
 //console.log(req.body);
 
