@@ -171,31 +171,57 @@ module.exports.getLogs = async(req, res) => {
 
 module.exports.addTemplate = async(req, res) => {
 
-    var data = JSON.parse(req.body.strNewTemplate);
+//    var data = JSON.parse(req.body.strNewTemplate);
+
+    var data = req.body.strNewTemplate;
 
     console.log("Data: " + JSON.stringify(data, undefined, 2));
 
-//    res.json({status: "done"});
+  // res.json({status: "done"});
 
     var newTemplate = {
         name : data.name,
         component : data.component
     }
 
+    var generatedLog = data.generatedLog;
     var responseStatus = '';
+      try {
 
-    Templates.create(newTemplate, function(err, result) {
-      if (err) {
-        responseStatus += " Error while creating Template! ";
-        res.json({status: responseStatus});
-        return err;
-      } else {
-        console.log("Log ID: " + result._id);
-        responseStatus += " Template created with ID: " + result._id;
-        res.json({status: responseStatus});
-      }
-    });
+           var newTemp = await Templates.create(newTemplate);
+
+           console.log("Type: " + (typeof newTemp));
+
+           newTemp = newTemp.toObject();
+
+           responseStatus += " Template created with ID: " + newTemp._id + "  ";
+
+           var strId = JSON.parse(JSON.stringify(newTemp._id));
+
+           var val = await logService.addLog(strId, newTemp.name, newTemp.component, newTemp.component, generatedLog);
+
+
+              if (val instanceof Error) {
+
+                responseStatus += "Error while Saving Log ";
+                res.json({ status: responseStatus });
+                console.log("error while saving log");
+
+              } else {
+
+                responseStatus += "Log Saved Successfully";
+                res.json({ status: responseStatus });
+                console.log("Log saved Successfully!");
+              }
+
+        } catch(err) {
+
+              console.log(err);
+              responseStatus += "Error while Saving Log ";
+              res.json({ status: responseStatus });
+        }
 }
+
 
 
 module.exports.updateTemplate = async(req, res) => {
