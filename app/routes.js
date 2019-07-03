@@ -11,4 +11,6 @@ module.exports = function(app){
     app.route('/test/getLogs').post(controller.getLogs);
     app.route('/test/removeLog').post(controller.removeLog);
     app.route('/test/addTemplate').post(controller.addTemplate);
+    app.route('/test/getKeyList').post(controller.getKeyList);
+    app.route('/test/getKeyValues').post(controller.getKeyValues);
 }

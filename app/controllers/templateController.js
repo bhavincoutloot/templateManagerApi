@@ -3,6 +3,7 @@ var logService = require('../services/logs');
 var Categories = require('../models/templateCategories')
 var ObjectId = require('mongodb').ObjectID;
 const TemplateLogs = require('../models/templateLogs');
+var categoryModels = require('../models/categoryModels');
 
 
 module.exports.pushCategoryTemplate= async(req,res)=>{
@@ -171,9 +172,10 @@ module.exports.getLogs = async(req, res) => {
 
 module.exports.addTemplate = async(req, res) => {
 
-//    var data = JSON.parse(req.body.strNewTemplate);
+    var data = JSON.parse(req.body.strNewTemplate);
 
-    var data = req.body.strNewTemplate;
+//    var data = req.body.strNewTemplate;
+
 
     console.log("Data: " + JSON.stringify(data, undefined, 2));
 
@@ -184,13 +186,14 @@ module.exports.addTemplate = async(req, res) => {
         component : data.component
     }
 
+    console.log(newTemplate);
     var generatedLog = data.generatedLog;
     var responseStatus = '';
       try {
 
            var newTemp = await Templates.create(newTemplate);
 
-           console.log("Type: " + (typeof newTemp));
+           console.log("Type: " + (JSON.stringify(newTemp, undefined, 2)));
 
            newTemp = newTemp.toObject();
 
@@ -290,5 +293,46 @@ module.exports.updateTemplate = async(req, res) => {
     }
 
 //  return res.status(200).json({auth:true,success:1,response:"updated successfully"});
+
+}
+
+
+module.exports.getKeyList = async(req, res) => {
+
+  try {
+    console.log("Fetching!");
+//    var keys = await categoryModels.find({},{"key":1, "_id":0}).lean()
+    var keys = await categoryModels.distinct("key").lean();
+    console.log(typeof keys);
+    console.log(JSON.stringify(keys));
+
+    res.json({key: keys});
+
+  } catch(err) {
+    console.log(err);
+  }
+}
+
+module.exports.getKeyValues = async(req, res) => {
+
+  try {
+
+    var key = req.body.key;
+    console.log("Key: "+key);
+    var values = await categoryModels.find({"key":key},{"displayTitle":1, "_id":0}).lean();
+
+    var titles = [];
+
+    values.forEach(function(item) {
+      titles.push(item.displayTitle);
+    });
+
+    console.log(titles);
+
+    res.json({title: titles});
+
+  }catch(err) {
+    console.log(err);
+  }
 
 }

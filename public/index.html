@@ -1,0 +1,1356 @@
+<!doctype html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.6/css/mdb.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.7/dist/css/bootstrap-select.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="css/index.css">
+
+  <title>Sell Templating Engine</title>
+
+</head>
+
+<body class="mostly-customized-scrollbar">
+
+<div id="loader" style="display: none;"></div>
+
+<div class="sidenav">
+  <a id="refresh" onclick="location.reload()" href="#">Templates</a>
+  <a id="add_template" data-toggle="modal" data-target="#take_template_name_modal" href="#">Add Template</a>
+  <a id="add_page" onclick="addNewPage()" style="visibility: hidden;" href="#">Add Pages</a>
+  <a id="display_logs" onclick="displayLogs()" href="#">Display Logs</a>
+  <a id="save_changes" onclick="saveChanges()" style="visibility: hidden;" href="#">Save Changes</a>
+  <a id="add_new_template" onclick="addNewTemplate()" style="visibility: hidden;" href="#">Save Template</a>
+  <a id="edit_json" onclick="editJson()" style="visibility: hidden;" href="#">Edit JSON</a>
+  <a id="update_json" onclick="updateJson()" style="visibility: hidden;" href="#">Update JSON</a>
+  <a id="back_button" onclick="backPressed()" style="visibility: hidden;" href="#">Back</a>
+
+  <img class="img-fluid img-thumbnail" src="https://cdn1.coutloot.com/chatImages/1560852654810.png" style="background-color: #ED4C67; height: 50px; width: 100px; margin: 0 auto; display: block; margin-bottom: 15px;">
+
+</div>
+
+
+
+<div class="main">
+  <h1 id="main_header">All Templates</h1>
+  <div class="md-form mt-0 m-2" style="width: 250px; margin: 20px;">
+    <input class="form-control" type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search for names.." >
+  </div>
+  <div style="margin:0px!important;height: 93vh;">
+            <textarea id="jsonData" class="shadow" style="width: 100%; height: 100%; overflow-y: scroll; display: none;">
+
+        </textarea>
+    <div class="row no_margin">
+
+        <div class="col-md-8 no_margin" id="componentPicker" style="padding:10px; display: none;">
+
+          <div class="container">
+            <select id="selectpicker" onchange="component_selected()" style="width: 355px;">
+              <option disabled selected>Select Component</option>
+
+              <optgroup label="Complete Screen Components" data-max-options="2">
+                <option id="complete_screen" value="0">C1 - Single Selection List</option>
+                <option id="complete_screen" value="1">C2 - Multiple Selection List</option>
+                <option id="complete_screen" value="2">C7 - Varient + Price Dialog Selection List</option>
+                <option id="complete_screen" value="3">C8 - Quantity Slider - Mulitple Selection List</option>
+                <option id="complete_screen" value="4">Address Selection Screen</option>
+                <option id="complete_screen" value="5">Price & Service Selection Screen</option>
+                <option id="complete_screen" value="6">Only Services Selection Screen</option>
+                <option id="complete_screen" value="7">Category Screen</option>
+                <option id="complete_screen" value="8">Capture Image Screen</option>
+                <option id="complete_screen" value="9">Billing Warranty Screen</option>
+                <option id="complete_screen" value="10">Thank you Screen</option>
+              </optgroup>
+              <optgroup label="Multi Components for Single Screen" data-max-options="2">
+                <option value="11">C3 - Date Selector</option>
+                <option value="12">C4 - Place Selector</option>
+                <option value="13">C4 - Time Selector</option>
+                <option value="14">C5 - Multiple Choice Questions</option>
+                <option value="15">C6 - Single Choice Questions</option>
+                <option value="16">C9 - Static Page</option>
+                <option value="17">C10</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+
+
+        <ul id="listContainer" class="list-group list-group-flush shadow" style="width: auto; height: 650px; overflow-y: scroll;">
+
+          <div id="templateList" style="cursor: pointer;"> </div>
+          <div id="pagesList"> </div>
+          <div id="componentList"> </div>
+          <div id="logsList"> </div>
+          <div id="selectComponentList"></div>
+
+        </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Category Input -->
+
+<div class="modal fade" id="modalCategoryList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Category Input</h4>
+
+<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button> -->
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <i class="fas fa-envelope prefix grey-text"></i>
+          <input type="text" id="categoryInput" onkeyup="searchCategoryFunction()" class="form-control">
+          <label data-error="wrong" data-success="right"  for="defaultForm-email">Enter Category Name</label>
+        </div>
+
+        <div class="md-form mb-4">
+            <ul id="categoryListContainer" class="list-group list-group-flush" style="width: 100%; height: 200px; overflow-y: scroll; cursor: pointer">
+
+            <div id="categoryList"> </div>
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- -->
+
+
+
+
+<!-- Adding Components -->
+
+
+  <!-- Template Name Input. -->
+    <div class="modal fade" id="take_template_name_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Enter Template Category</h5>
+          </div>
+          <div class="modal-body">
+            <!-- Material input -->
+            <div class="md-form">
+              <input type="text" id="modal_input" class="form-control">
+              <label for="form1">Template Category</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="process_name()">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Page Data -->
+    <div class="modal fade" id="page_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"> Enter Components for Page </h5>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="addNewPage()">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- Modals for Components -->
+
+
+
+
+<!-- C1 -->
+    <div class="modal fade right" id="c1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+      data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="myModalLabel">C1 - Single Selection List</h4>
+            <button type="button" class="close" id="C1_Close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" id="c1_list_header" class="form-control" placeholder="Enter List Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c1_list_subHeader" class="form-control" placeholder="Enter List Sub Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+            <input type="text" id="c1_key" class="form-control" placeholder="Enter Key For Selection">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c1_data_checkbox" onchange="c1_data_checkbox()"
+                checked>
+              <label class="custom-control-label" for="c1_data_checkbox">Send Data via Url</label>
+            </div>
+            <input type="text" id="data_url_input" class="form-control" placeholder="Enter Data Url" onclick="add_inline_data_clicked()"
+              >
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c1_search_checkbox" onchange="c1_search_checkbox()"
+                checked>
+              <label class="custom-control-label" for="c1_search_checkbox">List is Searchable</label>
+            </div>
+
+            <input type="text" id="c1_search_url_input" class="form-control" placeholder="Enter Search Url" >
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="form-control btn btn-primary" onclick="process_c1()">Save changes</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- C1 -->
+    <!-- C1 Inline Data -->
+    <div class="modal fade right" id="add_inline_data" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+      aria-hidden="true" data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="myModalLabel">Add Manual Inline Data</h4>
+            <button type="button" class="close" id="C1_data_model" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" id="list_display_header" class="form-control" placeholder="Enter Display Header*">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+            <input type="text" id="list_display_subHeader" class="form-control" placeholder="Enter Display Sub Header*">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+            <input type="text" id="list_display_icon" class="form-control" placeholder="Enter Display Icon">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <button type="button" class="form-control btn btn-primary" onclick="add_item_to_list()">Add To List</button>
+
+
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <!-- Inline Data -->
+
+
+
+
+
+    <!-- C2 -->
+    <div class="modal fade right" id="c2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+      data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="c2_myModalLabel">C2 - Multiple Selection List</h4>
+            <button type="button" class="close" id="c2_Close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" id="c2_list_header" class="form-control" placeholder="Enter List Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c2_list_subHeader" class="form-control" placeholder="Enter List Sub Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+            <input type="text" id="c2_key" class="form-control" placeholder="Enter Key For Selection">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c2_data_checkbox" onchange="c2_data_checkbox()"
+                checked>
+              <label class="custom-control-label" for="c2_data_checkbox">Send Data via Url</label>
+            </div>
+            <input type="text" id="c2_data_url_input" class="form-control" placeholder="Enter Data Url" onclick="c2_add_inline_data_clicked()">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c2_search_checkbox" onchange="c2_search_checkbox()"
+                checked>
+              <label class="custom-control-label" for="c2_search_checkbox">List is Searchable</label>
+            </div>
+
+            <input type="text" id="c2_search_url_input" class="form-control" placeholder="Enter Search Url" >
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="form-control btn btn-primary" onclick="process_c2()">Save changes</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- C2 -->
+
+    <!-- C2 Inline Data -->
+    <div class="modal fade right" id="c2_add_inline_data" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+      aria-hidden="true" data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="myModalLabel">Add Manual Inline Data</h4>
+            <button type="button" class="close" id="c2_data_model" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" id="c2_list_display_header" class="form-control" placeholder="Enter Display Header*">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c2_list_display_subHeader" class="form-control" placeholder="Enter Display Header*">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+            <input type="text" id="c2_list_display_icon" class="form-control" placeholder="Enter Display Icon">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <button type="button" class="form-control btn btn-primary" onclick="c2_add_item_to_list()">Add To List</button>
+
+
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <!-- Inline Data -->
+
+
+    <!-- c7 -->
+    <div class="modal fade right" id="c7" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+      data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="c7_myModalLabel">C7 - Varient + Price Dialog Selection List</h4>
+            <button type="button" class="close" id="c7_Close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" id="c7_list_header" class="form-control" placeholder="Enter List Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c7_list_subHeader" class="form-control" placeholder="Enter List Sub Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+            <input type="text" id="c7_key" class="form-control" placeholder="Enter Key For Selection">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c7_data_checkbox" onchange="c7_data_checkbox()"
+                checked>
+              <label class="custom-control-label" for="c7_data_checkbox">Send Data via Url</label>
+            </div>
+            <input type="text" id="c7_data_url_input" class="form-control" placeholder="Enter Data Url" onclick="c7_add_inline_data_clicked()"
+              >
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c7_search_checkbox" onchange="c7_search_checkbox()"
+                checked>
+              <label class="custom-control-label" for="c7_search_checkbox">List is Searchable</label>
+            </div>
+
+            <input type="text" id="c7_search_url_input" class="form-control" placeholder="Enter Search Url" >
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="form-control btn btn-primary" onclick="process_c7()">Save changes</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- C7 -->
+
+    <!-- C7 Inline Data -->
+    <div class="modal fade right" id="c7_add_inline_data" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+      aria-hidden="true" data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="myModalLabel">Add Manual Inline Data</h4>
+            <button type="button" class="close" id="c7_data_model" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" id="c7_list_display_header" class="form-control" placeholder="Enter Display Header*">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c7_list_display_subHeader" class="form-control" placeholder="Enter Display Header*">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+            <input type="text" id="c7_list_display_icon" class="form-control" placeholder="Enter Display Icon">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <button type="button" class="form-control btn btn-primary" onclick="c7_add_item_to_list()">Add To List</button>
+
+
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <!-- Inline Data -->
+
+
+
+
+
+    <!-- C3 -->
+    <div class="modal fade right" id="c3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+      data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="myModalLabel">C3 - Date Selection Component</h4>
+            <button type="button" class="close" id="c3_close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" id="c3_list_header" class="form-control" placeholder="Enter Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c3_list_subHeader" class="form-control" placeholder="Enter sub Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c3_key" class="form-control" placeholder="Enter Key">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c3_iscompulsory">
+              <label class="custom-control-label" for="c3_iscompulsory">Is Compulsory?</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c3_validation" onchange="c3_validation_checkbox()"
+                checked="true">
+              <label class="custom-control-label" for="c3_validation">validation</label>
+            </div>
+
+
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <div id="c3_fade">
+
+              <input type="text" id="c3_validationText" class="form-control" placeholder="validation text">
+
+
+              <div class="gap" style="background:#FFF!important;padding: 5px;"></div>
+
+              <input type="Text" id="c3_from_date" class="form-control" placeholder="From  -  YYYY-MM-DD" style="width: 210px;">
+
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="c3_from_validation">
+                <label class="custom-control-label" for="c3_from_validation">empty</label>
+              </div>
+
+
+              <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+              <input type="Text" id="c3_to_date" class="form-control" placeholder="TO  -  YYYY-MM-DD" style="width: 210px;">
+
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="c3_to_validation">
+                <label class="custom-control-label" for="c3_to_validation">empty</label>
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+          <div class="modal-footer">
+            <button  id="save_component" type="button" class="form-control btn btn-primary" onclick="process_c3()">Save changes</button>
+          </div>
+
+          <div class="modal-footer">
+            <button id="add_component" type="button" class="form-control btn btn-primary" onclick="add_c3_currentPage()">add In Same Page</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- C3 -->
+
+
+    <!-- C8 -->
+    <div class="modal fade right" id="c8" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+      data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="myModalLabel">C8 - Date Selection Component</h4>
+            <button type="button" class="close" id="c8_close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" id="c8_list_header" class="form-control" placeholder="Enter Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c8_list_subHeader" class="form-control" placeholder="Enter sub Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c8_key" class="form-control" placeholder="Enter Key">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c8_iscompulsory">
+              <label class="custom-control-label" for="c8_iscompulsory">Is Compulsory?</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c8_validation" onchange="c8_validation_checkbox()"
+                checked="true">
+              <label class="custom-control-label" for="c8_validation">validation</label>
+            </div>
+
+
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <div id="c8_fade">
+
+              <input type="text" id="c8_validationText" class="form-control" placeholder="validation text">
+
+              <div class="gap" style="background:#FFF!important;padding: 5px;"></div>
+
+              <input type="Text" id="c8_from_date" class="form-control" placeholder="From  -  YYYY-MM-DD" style="width: 210px;">
+
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="c8_from_validation">
+                <label class="custom-control-label" for="c8_from_validation">empty</label>
+              </div>
+
+
+              <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+              <input type="Text" id="c8_to_date" class="form-control" placeholder="TO  -  YYYY-MM-DD" style="width: 210px;">
+
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="c8_to_validation">
+                <label class="custom-control-label" for="c8_to_validation">empty</label>
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+          <div class="modal-footer">
+            <button id="save_component" type="button" class="form-control btn btn-primary" onclick="process_c8()">Save changes</button>
+          </div>
+
+          <div class="modal-footer">
+            <button id="add_component" type="button" class="form-control btn btn-primary" onclick="add_c8_currentPage()">add In Same Page</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- C8 -->
+
+
+
+    <!-- C4 -->
+    <div class="modal fade right" id="c4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+      data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="myModalLabel">C4 - Place Selection Component</h4>
+            <button type="button" class="close" id="c4_close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" id="c4_list_header" class="form-control" placeholder="Enter Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c4_list_subHeader" class="form-control" placeholder="Enter Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c4_key" class="form-control" placeholder="Enter Key">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c4_iscompulsory">
+              <label class="custom-control-label" for="c4_iscompulsory">Is Compulsory?</label>
+            </div>
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button id="save_component" type="button" class="form-control btn btn-primary" onclick="process_c4()">Save changes</button>
+          </div>
+
+          <div class="modal-footer">
+            <button id="add_component" type="button" class="form-control btn btn-primary" onclick="add_c4_currentPage()">add In Same Page</button>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <!-- C4 -->
+
+
+    <!-- C5-->
+    <div class="modal fade right" id="c5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+      data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="myModalLabel">C5 - Multiple Choice Question</h4>
+            <button type="button" class="close" id="c5_close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+
+            <input type="text" id="c5_key" class="form-control" placeholder="Enter Key">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c5_list_header" class="form-control" placeholder="Enter Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+            <input type="text" id="c5_list_subHeader" class="form-control" placeholder="Enter SubHeader">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c5_iscompulsory">
+              <label class="
+custom-control-label" for="c5_iscompulsory">Is Compulsory?</label>
+            </div>
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+            <textarea class="form-control" rows="5" id="c5_answers" placeholder="Enter answers/options json"></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button id="save_component" type="button" class="form-control btn btn-primary" onclick="process_c5()">Save changes</button>
+          </div>
+
+          <div class="modal-footer">
+            <button id="add_component" type="button" class="form-control btn btn-primary" onclick="add_c5_currentPage()">add In Same Page</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- C5 -->
+
+
+    <!-- C6-->
+    <div class="modal fade right" id="c6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+      data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="myModalLabel">C6 - Single Choice Questions</h4>
+            <button type="button" class="close" id="c6_close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+
+            <input type="text" id="c6_key" class="form-control" placeholder="Enter Key">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c6_list_header" class="form-control" placeholder="Enter Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+            <input type="text" id="c6_list_subHeader" class="form-control" placeholder="Enter SubHeader">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c6_iscompulsory">
+              <label class="
+custom-control-label" for="c6_iscompulsory">Is Compulsory?</label>
+            </div>
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+            <textarea class="form-control" rows="5" id="c6_answers" placeholder="Enter answers/options json"></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button id="save_component" type="button" class="form-control btn btn-primary" onclick="process_c6()">Save changes</button>
+          </div>
+
+
+          <div class="modal-footer">
+            <button id="add_component" type="button" class="form-control btn btn-primary" onclick="add_c6_currentPage()">add In Same Page</button>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <!-- C6 -->
+
+
+    <!-- C9-->
+    <div class="modal fade right" id="c9" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+      data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="myModalLabel">C9 - Static Page</h4>
+            <button type="button" class="close" id="c9_close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+
+            <input type="text" id="c9_key" class="form-control" placeholder="Enter Key">
+
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c9_iscompulsory">
+              <label class="
+custom-control-label" for="c9_iscompulsory">Is Compulsory?</label>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button id="save_component" type="button" class="form-control btn btn-primary" onclick="process_c9()">Save changes</button>
+          </div>
+
+
+          <div class="modal-footer">
+            <button id="add_component" type="button" class="form-control btn btn-primary" onclick="add_c9_currentPage()">add In Same Page</button>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <!-- C9 -->
+
+
+
+    <!-- C10 -->
+    <div class="modal fade right" id="c10" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+      data-backdrop="static" data-keyboard="false">
+
+      <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-full-height modal-right" role="document">
+
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title w-100" id="myModalLabel">C10</h4>
+            <button type="button" class="close" id="c10_close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <input type="text" id="c10_list_header" class="form-control" placeholder="Enter Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c10_list_subHeader" class="form-control" placeholder="Enter Sub Header">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c10_key" class="form-control" placeholder="Enter Key">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c10_type" class="form-control" placeholder="Enter Type">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+            <input type="text" id="c10_limit" class="form-control" placeholder="Enter Limit">
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="c10_iscompulsory">
+              <label class="custom-control-label" for="c10_iscompulsory">Is Compulsory?</label>
+            </div>
+            <div class="gap" style="background:#FFF!important;padding: 10px;"></div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button id="save_component" type="button" class="form-control btn btn-primary" onclick="process_c10()">Save changes</button>
+          </div>
+
+          <div class="modal-footer">
+            <button id="add_component" type="button" class="form-control btn btn-primary" onclick="add_c10_currentPage()">Add In Same Page</button>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <!-- C10 -->
+
+
+
+
+
+
+
+    <!-- /Modals for Components -->
+
+
+
+ <script src="https://code.jquery.com/jquery-3.4.0.js" integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.6/js/mdb.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.7/dist/js/bootstrap-select.min.js"></script>
+ <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+ <script type="text/javascript" src="js/Logs.js"></script>
+ <script type="text/javascript" src="js/EditTemplate.js"></script>
+ <script type="text/javascript" src="js/AddIcon.js"></script>
+ <script type="text/javascript" src="js/AddNewData.js"></script>
+ <script type="text/javascript" src="js/AddNewTemplate.js"></script>
+ <script type="text/javascript" src="js/Components.js"></script>
+ <script type="text/javascript" src="js/SaveTemplate.js"></script>
+ <script type="text/javascript" src="js/DuplicateTemplate.js"></script>
+ <script type="text/javascript" src="js/SearchTemplate.js"></script>
+ <script type="text/javascript" src="js/UpdateTemplate.js"></script>
+
+ <script type="text/javascript" src="js/components/C1.js"></script>
+ <script type="text/javascript" src="js/components/C2.js"></script>
+ <script type="text/javascript" src="js/components/C3.js"></script>
+ <script type="text/javascript" src="js/components/C4.js"></script>
+ <script type="text/javascript" src="js/components/C5.js"></script>
+ <script type="text/javascript" src="js/components/C6.js"></script>
+ <script type="text/javascript" src="js/components/C7.js"></script>
+ <script type="text/javascript" src="js/components/C8.js"></script>
+ <script type="text/javascript" src="js/components/C9.js"></script>
+ <script type="text/javascript" src="js/components/C10.js"></script>
+
+ <script type="text/javascript" src="js/Pages.js"></script>
+ <script type="text/javascript" src="js/DisplayComponents.js"></script>
+ <script type="text/javascript" src="js/EditComponents.js"></script>
+ <script type="text/javascript" src="js/SelectComponent.js"></script>
+ <script type="text/javascript" src="js/EditJson.js"></script>
+
+
+
+<script>
+
+  var allPages = [];
+  var newTemplate = [];
+  var currPage = [];
+
+  var singlePageComponents = ['C1', 'C2', 'C7', 'C8'];
+
+  var items = [];
+
+  var pageInsertIndex = -1;
+
+  var dest = "";
+
+  var currComponentIndex = "";
+
+  var updatablePages = [];
+  var updatablePage = [];
+
+
+  //--------------------
+
+  var template = [];
+  var templateId = '';
+
+  var templateName = '';
+
+  var log = '';
+
+  //--------------------
+
+
+  var template = [];
+  var template_name = "";
+  var currentTemplateId = '';
+
+
+
+      var c1_inline_data = [];
+      var c2_inline_data = [];
+      var c7_inline_data = [];
+
+
+
+
+
+
+  $.ajax({
+    type: 'POST',
+    url: "/test/getTemplateList",
+    success: function (data) {
+      console.log("temp_data - ", data['temp']);
+      var html = '';
+
+                  for(var i=0;i<data['temp'].length;i++)
+                    {
+
+                      html += '<li class="list-group-item"><div class="no_margin"><div id="innerDiv" class="no_margin"><div><b>Template ID : '+data['temp'][i]['_id']+'</b></div><div id="displayCategory">Category : '+data['temp'][i]['name']+'</div></div><div class="row no_margin"><div class="col-md-4"></div><div class="col-md-8"><div style="float:right;"><div class="row no_margin" style="cursor: pointer"><div class="list_button" style="margin-left:0px;" id='+data['temp'][i]['_id']+' onclick="editTemplate(this.id);">Edit</div><div class="list_button" style="margin-left:0px;" id='+data['temp'][i]['_id']+' onclick="duplicateTemplate(this.id);">Duplicate</div></div></div></div></div></div></li>';
+
+                  }
+            $('#back_button').css('visibility', 'hidden');
+            $('#add_new_template').css('visibility', 'hidden');
+
+            $('#templateList').append(html);
+            log = '';
+            $('#searchInput').css('visibility', 'visible');
+            $('#reset_template').css('visibility', 'hidden');
+            $('#add_page').css('visibility', 'hidden');
+            $('#searchInput').val('');
+           // $('#take_template_name_modal').hide();
+
+    }
+  })
+
+
+
+
+  function backPressed() {
+
+      console.log("Dest: " + dest);
+
+      if (dest == "pages") {
+
+        $('#pagesList').empty();
+        $('#componentList').empty();
+        displayPagesOfTemplate(allPages);
+
+      } /*else if(dest == "edit_pages") {
+
+        $('#pagesList').empty();
+        displayPagesToEdit(allPages);
+
+      } */else {
+
+        $('#templateList').empty();
+        $('#refresh').click();
+      }
+  }
+
+
+
+
+
+
+
+  //-------------------Duplicate---
+
+
+
+  //-------------------
+
+
+
+/*  function setCategoryName() {
+
+    var text =  $('#categoryInput').val();
+    $('#categoryInput').val('');
+    $('#modalCategoryList').modal('toggle');
+    //$('#loader').css('display', 'block');
+
+      if(text == "") ;
+      else {
+
+          $.ajax({
+                url: 'http://localhost:3000/test/getCategoryId',
+                type: 'POST',
+                data : {
+                  name : text
+                },
+                dataType: 'json',
+                success: function(data) {
+
+                  console.log(data.categoryId);
+                  var categoryId = data.categoryId;
+        //          $('#url').val(data.image);
+                  var component = updatablePage[currComponentIndex];
+                  var componentIndex = currComponentIndex;
+
+
+                    if(categoryId) {
+
+                        var updatedComponent = {};
+
+                        updatedComponent['componentId'] = component.componentId;
+                        updatedComponent['key'] = component.key;
+                        updatedComponent['componentDetails'] = {};
+
+                      updatedComponent.componentDetails.header = $('#component_header').val();
+                      updatedComponent.componentDetails.subHeader = $('#component_subheader').val();
+
+
+                        updatedComponent.componentDetails.dataUrl = "";
+                        updatedComponent.componentDetails.searchUrl = "";
+                        updatedComponent.componentDetails.data = [];
+
+                        var itemCount = 0;
+
+                        component.componentDetails.data.forEach(function(item) {
+
+                            if ($("#component_data_"+componentIndex+"_"+itemCount+"").val() != "" ||
+                                $("#component_data_title_"+componentIndex+"_"+itemCount+"").val()) {
+
+
+                                var dataItem = {};
+                                dataItem.displaySubTitle = $("#component_data_subtitle_"+componentIndex+"_"+itemCount+"").val();
+                                dataItem.displayIcon = updatablePage[componentIndex].componentDetails.data[itemCount].displayIcon;
+
+
+                                dataItem.displayId = $("#component_data_"+componentIndex+"_"+itemCount+"").val();
+                                dataItem.displayTitle = $("#component_data_title_"+componentIndex+"_"+itemCount+"").val();
+
+                                updatedComponent.componentDetails.data.push(dataItem);
+
+                            } /* else {
+
+                                dataItem.displayId = "";
+                                dataItem.displayTitle = "";
+                            } */
+
+                  //          console.log($("#component_data_"+itemCount+"").val());
+
+  /*                          itemCount++;
+                        });
+
+
+                        var dataItem = {};
+                        dataItem.displaySubTitle = "";
+                        dataItem.displayIcon = ""
+
+                        dataItem.displayId = categoryId;
+                        dataItem.displayTitle = text;
+
+                        updatedComponent.componentDetails.data.push(dataItem);
+
+                      var pageLoc = updatablePages.indexOf(updatablePage);
+                      updatablePage[componentIndex] = updatedComponent;
+                      updatablePages[pageLoc] = updatablePage;
+
+
+                      console.log("New: "+JSON.stringify(allPages, undefined, 2));
+
+                      $('#pagesList').empty();
+                      $('#componentList').empty();
+
+                      $('#refresh').css('visibility', 'hidden');
+                      $('#add_template').css('visibility', 'hidden');
+                      $('#loader').css('display', 'hidden');
+
+                      log += 'New data added to Component No. ' + (componentIndex+1) + ' of Page No. ' + (pageLoc+1) + ' of Template ' + templateId + ' ,  ';
+
+                      displayEditedComponents(pageLoc);
+
+                    } else {
+
+                      //var pageLoc = updatablePages.indexOf(updatablePage);
+                      //displayEditedComponents(pageLoc);
+
+                      $('#modalCategoryList').modal('toggle');
+                      alert('Invalid Category!');
+                    }
+
+                }
+          });
+
+      }
+  }
+*/
+
+
+
+
+
+
+
+
+
+   // ----------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+//-----------------------------Components-------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//-------------------------------------
+
+
+/*
+<li class="list-group-item">
+  <div class="no_margin">
+    <div class="no_margin">
+      <div><b>Template ID : '+data['temp'][i]['_id']+'</b></div>
+      <div>Category : '+data['temp'][i]['name']+'</div>
+    </div>
+    <div class="row no_margin">
+      <div class="col-md-4"></div>
+      <div class="col-md-8">
+        <div>
+          <div class="row no_margin" style="cursor: pointer">
+            <div class="list_button" id='+data['temp'][i]['_id']+' onclick="duplicate(this.id);">Duplicate</div>
+              <div class="list_button" style="margin-left:5px;" id='+data['temp'][i]['_id']+' onclick="editTemplate(this.id);">Edit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</li> */
+
+//---------------------------------------------------------------------------------------//
+
+//---------------------------------------------------------------------------------------//
+
+
+/*
+'
+<li class="list-group-item">
+   <div class="no_margin">
+   <div class="no_margin">
+   <div class="col-md-8">
+   <div><b>Component No. : '+count+'</b></div>
+   <div>Component ID : '+component.componentId+'</div>
+   <div>Header : <input id="component_header" type="text" value="'+component.componentDetails.header+'" /></div>
+    <div>
+      Sub-Header : <input id="component_subheader" type="text" value="'+component.componentDetails.subHeader+'" />
+      <div>DataUrl : <input id="component_dataurl" type="text" value="'+component.componentDetails.dataUrl+'" /></div>
+      <div>SearchUrl : <input id="component_searchurl" type="text" value="'+component.componentDetails.searchUrl+'" /></div>
+    </div>
+    <div class="col-md-4">
+        <div class="row no_margin" style="cursor: pointer">
+                  <div class="list_button" style="margin-left:5px;" onclick="removeComponent('+(pageIndex)+', '+(count-1)+');">Remove</div>
+        </div>
+
+    </div>
+
+      <div class="row no_margin">
+         <div class="col-md-4"></div>
+         <div class="col-md-8">
+            <div>
+               <div class="row no_margin" style="cursor: pointer">
+                  <div class="list_button" style="margin-left:5px;" onclick="editComponent('+(count-1)+');">Save</div>
+
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</li>
+'
+
+*/
+
+
+
+</script>
+
+</body>
+</html>
