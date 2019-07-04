@@ -5,7 +5,7 @@ function displayComponentsOfPage(pageIndex) {
 
 //      $('#save_changes').css('visibility', 'hidden');
 
-    
+
 
     //  console.log(components);
 
@@ -24,24 +24,24 @@ function displayComponentsOfPage(pageIndex) {
       components.forEach(function(component) {
 
           if(component.componentDetails.hasOwnProperty('data') && component.componentDetails.data.length > 0) {
-          
+
             if (component.componentId == "C10") {
 
               pageComponents += '<li class="list-group-item" ><div class="no_margin"><div class="no_margin"><div class="m-2"><b>Component No. : '+count+'</b></div><div class="m-2">Component ID : '+component.componentId+'</div><div class="m-2">Header : <input id="component_header_'+count+'" type="text" value="'+component.componentDetails.header+'" /></div><div class="m-2">Sub-Header : <input id="component_subheader_'+count+'" type="text" value="'+component.componentDetails.subHeader+'" /></div><div class="m-2">Key : <input id="component_key_'+count+'" type="text" value="'+component.key+'" /></div><div class="m-2">Limit : <input id="component_limit_'+count+'" type="text" value="'+component.componentDetails.limit+'" /></div><div class="m-2">Type : <input id="component_type_'+count+'" type="text" value="'+component.componentDetails.type+'" /></div><div style="float:right;"><div class="list_button" style="margin-left:5px;" onclick="removeComponent('+(pageIndex)+', '+(count-1)+');">Remove</div></div></div><br><table id="data_table">';
 
             } else {
-             
+
               pageComponents += '<li class="list-group-item" ><div class="no_margin"><div class="no_margin"><div class="m-2"><b>Component No. : '+count+'</b></div><div class="m-2">Component ID : <input id="component_id_'+count+'" type="text" value="'+component.componentId+'" /></div><div class="m-2">Header : <input id="component_header_'+count+'" type="text" value="'+component.componentDetails.header+'" /></div><div class="m-2">Sub-Header : <input id="component_subheader_'+count+'" type="text" value="'+component.componentDetails.subHeader+'" /></div><div class="m-2">Key : <input id="component_key_'+count+'" type="text" value="'+component.key+'" /></div><div style="float:right;"><div class="list_button" style="margin-left:5px;" onclick="removeComponent('+(pageIndex)+', '+(count-1)+');">Remove</div></div></div><br><table id="data_table">';
-      
+
             }
-            
+
             var dataItems = '<tr> <td> Title </td> <td> Id </td> <td> Sub Title </td> <td> Icon </td> </tr>';
             var itemCount = 0;
 
             component.componentDetails.data.forEach(function(item) {
 
 
-                dataItems += '<tr> <td><input id="component_data_title_'+(count-1)+'_'+itemCount+'" type="text" value="'+item.displayTitle+'" /></td> <td><input id="component_data_'+(count-1)+'_'+itemCount+'" type="text" value="'+item.displayId+'" /></td> <td><input id="component_data_subtitle_'+(count-1)+'_'+itemCount+'" type="text" value="'+item.displaySubTitle+'" /></td> <td><a id="component_data_icon_'+(count-1)+'_'+itemCount+'" href="'+ (item.displayIcon ? item.displayIcon : "#" ) + '"> '+ (item.displayIcon ? "Click to show Icon" : "No Image to display" ) +' </a></td><td><input onchange="changeIcon('+(count-1)+','+itemCount+')" id="component_change_data_icon_'+(count-1)+'_'+itemCount+'" type="file" /></td> </tr>';
+                dataItems += '<tr> <td><input id="component_data_title_'+(count-1)+'_'+itemCount+'" type="text" value="'+item.displayTitle+'" /></td> <td><input id="component_data_'+(count-1)+'_'+itemCount+'" type="text" value="'+item.displayId+'" /></td> <td><input id="component_data_subtitle_'+(count-1)+'_'+itemCount+'" type="text" value="'+item.displaySubTitle+'" /></td> <td><a id="component_data_icon_'+(count-1)+'_'+itemCount+'" href="'+ (item.displayIcon ? item.displayIcon : "#" ) + '"> '+ (item.displayIcon ? "Click to show Icon" : "No Image to display" ) +' </a></td><td><input onchange="changeIcon('+(count-1)+','+itemCount+')" id="component_change_data_icon_'+(count-1)+'_'+itemCount+'" type="file" /></td><td><div class="list_button" style="margin-left:2px;" onclick="moveDataUp('+(pageIndex)+', '+(count-1)+', '+(itemCount)+');">Up</div></td><td><div class="list_button" style="margin-left:2px;" onclick="moveDataDown('+(pageIndex)+', '+(count-1)+', '+(itemCount)+');">Down</div></td> </tr>';
 
                 console.log(item.displayIcon ? item.displayIcon : '#');
 
@@ -60,7 +60,7 @@ function displayComponentsOfPage(pageIndex) {
             } else {
 
               pageComponents += '<li class="list-group-item"><div class="no_margin"><div class="no_margin"><div class="m-2"><b>Component No. : '+count+'</b></div><div class="m-2">Component ID : <input id="component_id_'+count+'" type="text" value="'+component.componentId+'" /></div><div class="m-2">Header : <input id="component_header_'+count+'" type="text" value="'+component.componentDetails.header+'" /></div><div class="m-2">Sub-Header : <input id="component_subheader_'+count+'" type="text" value="'+component.componentDetails.subHeader+'" /></div><div class="m-2">Key : <input id="component_key_'+count+'" type="text" value="'+component.key+'" /></div><div class="m-2">DataUrl : <input id="component_dataurl_'+count+'" type="text" value="'+component.componentDetails.dataUrl+'" /></div><div class="m-2">SearchUrl : <input id="component_searchurl_'+count+'" type="text" value="'+component.componentDetails.searchUrl+'" /></div><div class="row no_margin"><div><div><div class="row no_margin" style="cursor: pointer"><div style="float:left"><div class="list_button" style="margin-left:5px;" onclick="editComponentOfPage('+(count-1)+');">Save</div><div class="list_button" style="margin-left:5px;" onclick="removeComponent('+(pageIndex)+', '+(count-1)+');">Remove</div><div class="list_button" style="margin-left:5px; display:inline-block;" onclick="moveComponentUp('+(count-1)+');">Up</div><div class="list_button" style="margin-left:5px; display:inline-block;" onclick="moveComponentDown('+(count-1)+');">Down</div></div></div></div></div></div></div></li>';
-              
+
             }
           }
 
@@ -95,24 +95,24 @@ function displayComponentsAfterEdit(pageIndex) {
             components.forEach(function(component) {
 
           if(component.componentDetails.hasOwnProperty('data') && component.componentDetails.data.length > 0) {
-          
+
             if (component.componentId == "C10") {
 
               pageComponents += '<li class="list-group-item" ><div class="no_margin"><div class="no_margin"><div class="m-2"><b>Component No. : '+count+'</b></div><div class="m-2">Component ID : '+component.componentId+'</div><div class="m-2">Header : <input id="component_header_'+count+'" type="text" value="'+component.componentDetails.header+'" /></div><div class="m-2">Sub-Header : <input id="component_subheader_'+count+'" type="text" value="'+component.componentDetails.subHeader+'" /></div><div class="m-2">Key : <input id="component_key_'+count+'" type="text" value="'+component.key+'" /></div><div class="m-2">Limit : <input id="component_limit_'+count+'" type="text" value="'+component.componentDetails.limit+'" /></div><div class="m-2">Type : <input id="component_type_'+count+'" type="text" value="'+component.componentDetails.type+'" /></div><div style="float:right;"><div class="list_button" style="margin-left:5px;" onclick="removeComponent('+(pageIndex)+', '+(count-1)+');">Remove</div></div></div><br><table id="data_table">';
 
             } else {
-             
+
               pageComponents += '<li class="list-group-item" ><div class="no_margin"><div class="no_margin"><div class="m-2"><b>Component No. : '+count+'</b></div><div class="m-2">Component ID : <input id="component_id_'+count+'" type="text" value="'+component.componentId+'" /></div><div class="m-2">Header : <input id="component_header_'+count+'" type="text" value="'+component.componentDetails.header+'" /></div><div class="m-2">Sub-Header : <input id="component_subheader_'+count+'" type="text" value="'+component.componentDetails.subHeader+'" /></div><div class="m-2">Key : <input id="component_key_'+count+'" type="text" value="'+component.key+'" /></div><div style="float:right;"><div class="list_button" style="margin-left:5px;" onclick="removeComponent('+(pageIndex)+', '+(count-1)+');">Remove</div></div></div><br><table id="data_table">';
-      
+
             }
-            
+
             var dataItems = '<tr> <td> Title </td> <td> Id </td> <td> Sub Title </td> <td> Icon </td> </tr>';
             var itemCount = 0;
 
             component.componentDetails.data.forEach(function(item) {
 
 
-                dataItems += '<tr> <td><input id="component_data_title_'+(count-1)+'_'+itemCount+'" type="text" value="'+item.displayTitle+'" /></td> <td><input id="component_data_'+(count-1)+'_'+itemCount+'" type="text" value="'+item.displayId+'" /></td> <td><input id="component_data_subtitle_'+(count-1)+'_'+itemCount+'" type="text" value="'+item.displaySubTitle+'" /></td> <td><a id="component_data_icon_'+(count-1)+'_'+itemCount+'" href="'+ (item.displayIcon ? item.displayIcon : "#" ) + '"> '+ (item.displayIcon ? "Click to show Icon" : "No Image to display" ) +' </a></td><td><input onchange="changeIcon('+(count-1)+','+itemCount+')" id="component_change_data_icon_'+(count-1)+'_'+itemCount+'" type="file" /></td> </tr>';
+                dataItems += '<tr> <td><input id="component_data_title_'+(count-1)+'_'+itemCount+'" type="text" value="'+item.displayTitle+'" /></td> <td><input id="component_data_'+(count-1)+'_'+itemCount+'" type="text" value="'+item.displayId+'" /></td> <td><input id="component_data_subtitle_'+(count-1)+'_'+itemCount+'" type="text" value="'+item.displaySubTitle+'" /></td> <td><a id="component_data_icon_'+(count-1)+'_'+itemCount+'" href="'+ (item.displayIcon ? item.displayIcon : "#" ) + '"> '+ (item.displayIcon ? "Click to show Icon" : "No Image to display" ) +' </a></td><td><input onchange="changeIcon('+(count-1)+','+itemCount+')" id="component_change_data_icon_'+(count-1)+'_'+itemCount+'" type="file" /></td><td><div class="list_button" style="margin-left:2px;" onclick="moveDataUp('+(pageIndex)+', '+(count-1)+', '+(itemCount)+');">Up</div></td><td><div class="list_button" style="margin-left:2px;" onclick="moveDataDown('+(pageIndex)+', '+(count-1)+', '+(itemCount)+');">Down</div></td> </tr>';
 
                 console.log(item.displayIcon ? item.displayIcon : '#');
 
@@ -131,7 +131,7 @@ function displayComponentsAfterEdit(pageIndex) {
             } else {
 
               pageComponents += '<li class="list-group-item"><div class="no_margin"><div class="no_margin"><div class="m-2"><b>Component No. : '+count+'</b></div><div class="m-2">Component ID : <input id="component_id_'+count+'" type="text" value="'+component.componentId+'" /></div><div class="m-2">Header : <input id="component_header_'+count+'" type="text" value="'+component.componentDetails.header+'" /></div><div class="m-2">Sub-Header : <input id="component_subheader_'+count+'" type="text" value="'+component.componentDetails.subHeader+'" /></div><div class="m-2">Key : <input id="component_key_'+count+'" type="text" value="'+component.key+'" /></div><div class="m-2">DataUrl : <input id="component_dataurl_'+count+'" type="text" value="'+component.componentDetails.dataUrl+'" /></div><div class="m-2">SearchUrl : <input id="component_searchurl_'+count+'" type="text" value="'+component.componentDetails.searchUrl+'" /></div><div class="row no_margin"><div><div><div class="row no_margin" style="cursor: pointer"><div style="float:left"><div class="list_button" style="margin-left:5px;" onclick="editComponentOfPage('+(count-1)+');">Save</div><div class="list_button" style="margin-left:5px; display:inline-block;" onclick="moveComponentUp('+(count-1)+');">Up</div><div class="list_button" style="margin-left:5px; display:inline-block;" onclick="moveComponentDown('+(count-1)+');">Down</div></div></div></div></div></div></div></li>';
-              
+
             }
           }
 
@@ -149,4 +149,37 @@ function displayComponentsAfterEdit(pageIndex) {
 
       dest = "pages";
       $('#back_button').css('visibility', 'visible');
+}
+
+function moveDataUp(pageIndex, componentIndex, dataIndex) {
+
+  if(dataIndex > 0) {
+
+    var component = template[pageIndex][componentIndex];
+    var element = component.componentDetails.data[dataIndex];
+    component.componentDetails.data.splice(dataIndex, 1);
+    component.componentDetails.data.splice(dataIndex-1, 0, element);
+  }
+
+  updatablePage[componentIndex] = component;
+  updatablePages[pageIndex] = updatablePage;
+
+  console.log("New Data: " + JSON.stringify(component.componentDetails.data, undefined, 2));
+  displayComponentsAfterEdit(pageIndex);
+}
+
+function moveDataDown(pageIndex, componentIndex, dataIndex) {
+
+  var component = template[pageIndex][componentIndex];
+
+  if(dataIndex < component.componentDetails.data.length-1) {
+
+    var element = component.componentDetails.data[dataIndex];
+    component.componentDetails.data.splice(dataIndex, 1);
+    component.componentDetails.data.splice(dataIndex+1, 0, element);
+  }
+  updatablePage[componentIndex] = component;
+  updatablePages[pageIndex] = updatablePage;
+  console.log("New Data: " + JSON.stringify(component.componentDetails.data, undefined, 2));
+  displayComponentsAfterEdit(pageIndex);
 }
