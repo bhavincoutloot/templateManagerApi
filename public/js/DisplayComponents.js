@@ -153,9 +153,9 @@ function displayComponentsAfterEdit(pageIndex) {
 
 function moveDataUp(pageIndex, componentIndex, dataIndex) {
 
+  var component = updatablePages[pageIndex][componentIndex];
   if(dataIndex > 0) {
 
-    var component = template[pageIndex][componentIndex];
     var element = component.componentDetails.data[dataIndex];
     component.componentDetails.data.splice(dataIndex, 1);
     component.componentDetails.data.splice(dataIndex-1, 0, element);
@@ -170,7 +170,7 @@ function moveDataUp(pageIndex, componentIndex, dataIndex) {
 
 function moveDataDown(pageIndex, componentIndex, dataIndex) {
 
-  var component = template[pageIndex][componentIndex];
+  var component = updatablePages[pageIndex][componentIndex];
 
   if(dataIndex < component.componentDetails.data.length-1) {
 

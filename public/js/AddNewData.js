@@ -23,7 +23,7 @@
     return new Promise((resolve, reject) => {
 
         $.ajax({
-                url: '/test/getCategoryList',     
+                url: '/test/getCategoryList',
                 type: 'POST',
                 dataType: 'json',
                 success: function(data) {
@@ -127,7 +127,7 @@ function selectCategory(id) {
                       updatablePages[pageLoc] = updatablePage;
 
 
-                      console.log("New: "+JSON.stringify(allPages, undefined, 2));
+                      console.log("New: "+JSON.stringify(updatablePages, undefined, 2));
 
                       $('#pagesList').empty();
                       $('#componentList').empty();
