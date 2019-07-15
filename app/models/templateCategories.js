@@ -3,4 +3,5 @@ var Schema = mongoose.Schema;
 
 var templateSchema = new Schema({},{strict : false});
 
-module.exports=mongoose.model( "NS_test_categories", templateSchema, "NS_test_categories" );
+module.exports=mongoose.model( "newCategories", templateSchema, "newCategories" );
+// 	module.exports=mongoose.model( "NS_test_categories", templateSchema, "NS_test_categories" );
